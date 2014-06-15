@@ -1,16 +1,14 @@
-# sshd
-#
-# VERSION               0.0.1
+# A basic apache server. To use either add or bind mount content under /var/www
+FROM ubuntu:12.04
 
-FROM     debian
-MAINTAINER Thatcher R. Peskens "thatcher@dotcloud.com"
+MAINTAINER Jerome Marc version: 0.1
 
-# make sure the package repository is up to date
-RUN apt-get update
+RUN apt-get update && apt-get install -y apache2 && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get install -y openssh-server
-RUN mkdir /var/run/sshd
-RUN echo 'root:screencast' |chpasswd
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
 
-EXPOSE 22
-CMD    ["/usr/sbin/sshd", "-D"]
+EXPOSE 80
+
+CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"]
